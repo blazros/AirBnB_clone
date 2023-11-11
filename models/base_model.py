@@ -4,7 +4,10 @@ import models
 from uuid import uuid4
 from datetime import datetime
 
+
 class BaseModel:
+    """Represents the BaseModel of the HBnB project."""
+
     def __init__(self, *args, **kwargs):
         """Initialize a new BaseModel.
 
@@ -21,7 +24,7 @@ class BaseModel:
                 if key == "created_at" or key == "updated_at":
                     self.__dict__[key] = datetime.strptime(value, time_form)
                 else:
-                     self.__dict__[key] = value
+                    self.__dict__[key] = value
 
     def save(self):
         """Update updated_at with the current datetime."""
@@ -36,4 +39,5 @@ class BaseModel:
         return dict_cpy
 
     def __str__(self):
-        return "[{}] ({}) {}".format(self.__class__.__name__, self.id, self.__dict__)
+        class_name = self.__class__.__name__
+        return "[{}] ({}) {}".format(class_name, self.id, self.__dict__)
