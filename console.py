@@ -55,7 +55,7 @@ class HBNBCommand(cmd.Cmd):
 
     def default(self, arg):
         """Default behavior for cmd module when input is invalid"""
-        arg_dict = {
+        argdict = {
             "all": self.do_all,
             "show": self.do_show,
             "destroy": self.do_destroy,
@@ -68,9 +68,9 @@ class HBNBCommand(cmd.Cmd):
             match = re.search(r"\((.*?)\)", argl[1])
             if match is not None:
                 command = [argl[1][:match.span()[0]], match.group()[1:-1]]
-                if command[0] in arg_dict.keys():
+                if command[0] in argdict.keys():
                     call = "{} {}".format(argl[0], command[1])
-                    return arg_dict[command[0]](call)
+                    return argdict[command[0]](call)
         print("*** Unknown syntax: {}".format(arg))
         return False
 
@@ -101,17 +101,17 @@ class HBNBCommand(cmd.Cmd):
         Display the string representation of a class instance of a given id.
         """
         argl = parse(arg)
-        obj_dict = storage.all()
+        objdict = storage.all()
         if len(argl) == 0:
             print("** class name missing **")
         elif argl[0] not in HBNBCommand.__classes:
             print("** class doesn't exist **")
         elif len(argl) == 1:
             print("** instance id missing **")
-        elif "{}.{}".format(argl[0], argl[1]) not in obj_dict:
+        elif "{}.{}".format(argl[0], argl[1]) not in objdict:
             print("** no instance found **")
         else:
-            print(obj_dict["{}.{}".format(argl[0], argl[1])])
+            print(objdict["{}.{}".format(argl[0], argl[1])])
 
     def do_destroy(self, arg):
         """Usage: destroy <class> <id> or <class>.destroy(<id>)
@@ -188,16 +188,16 @@ class HBNBCommand(cmd.Cmd):
                 return False
 
         if len(argl) == 4:
-            obj = obj_dict["{}.{}".format(argl[0], argl[1])]
+            obj = objdict["{}.{}".format(argl[0], argl[1])]
             if argl[2] in obj.__class__.__dict__.keys():
                 valtype = type(obj.__class__.__dict__[argl[2]])
                 obj.__dict__[argl[2]] = valtype(argl[3])
             else:
                 obj.__dict__[argl[2]] = argl[3]
         elif type(eval(argl[2])) == dict:
-            obj = obj_dict["{}.{}".format(argl[0], argl[1])]
-            for key, value in eval(argl[2]).items():
-                if (key in obj.__class__.__dict__.keys() and
+            obj = objdict["{}.{}".format(argl[0], argl[1])]
+            for k, v in eval(argl[2]).items():
+                if (k in obj.__class__.__dict__.keys() and
                         type(obj.__class__.__dict__[k]) in {str, int, float}):
                     valtype = type(obj.__class__.__dict__[k])
                     obj.__dict__[k] = valtype(v)
